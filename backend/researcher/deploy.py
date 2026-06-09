@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 
-def run_command(cmd, capture_output=False, cwd=None):
+def run_command(cmd, capture_output=False, cwd=None, env = None):
     """Run a command and handle errors."""
     try:
         result = subprocess.run(
@@ -26,6 +26,7 @@ def run_command(cmd, capture_output=False, cwd=None):
             text=True,
             check=True,
             cwd=cwd,
+            env=env,
         )
         if capture_output:
             return result.stdout.strip()
@@ -177,6 +178,10 @@ def main():
     remote_image = f"{ecr_url}:{image_tag}"
 
     # Build Docker image
+    
+    build_env = os.environ.copy()
+    build_env["DOCKER_BUILDKIT"] = "0"
+
     print(f"\nBuilding Docker image for linux/amd64 with tag: {image_tag}")
     run_command(
         [
@@ -189,6 +194,7 @@ def main():
             ".",
         ],
         cwd=backend_dir,
+        env = build_env,
     )
 
     # Tag for ECR

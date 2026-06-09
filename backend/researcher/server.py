@@ -27,7 +27,10 @@ from tools import ingest_financial_document
 load_dotenv(override=True)
 
 app = FastAPI(title="Alex Researcher Service")
-
+REGION = "us-east-1"
+os.environ["AWS_REGION_NAME"] = REGION  # LiteLLM's preferred variable
+os.environ["AWS_REGION"] = REGION  # Boto3 standard
+os.environ["AWS_DEFAULT_REGION"] = REGION  # Fallback
 
 MCP_LOGGING_ENABLED = os.getenv("MCP_LOGGING") == "True"
 
@@ -79,14 +82,18 @@ async def run_research_agent(topic: str = None) -> str:
             _trim_for_log(query, max_length=500),
         )
 
-    region = os.environ.get("BEDROCK_REGION", "us-west-2")
+    region = "us-east-1"
     os.environ["AWS_REGION_NAME"] = region
     os.environ["AWS_REGION"] = region
     os.environ["AWS_DEFAULT_REGION"] = region
     model_name = os.environ.get(
         "RESEARCHER_MODEL", "bedrock/global.openai.gpt-oss-120b-1:0"
     )
-    model = LitellmModel(model=model_name)
+    MODEL = "bedrock/us.amazon.nova-pro-v1:0"
+    model = LitellmModel(model="openrouter/google/gemma-4-31b-it:free", 
+                        base_url="https://openrouter.ai/api/v1",
+                        api_key=os.environ.get("OPENROUTER_API_KEY"),
+                        )
 
     if MCP_LOGGING_ENABLED:
         logger.info(
@@ -218,8 +225,8 @@ async def test_bedrock():
     try:
         import boto3
 
-        region = os.environ.get("BEDROCK_REGION", "us-west-2")
-        model_id = os.environ.get("RESEARCHER_MODEL", "bedrock/global.openai.gpt-oss-120b-1:0")
+        region = "us-east-1"
+        model_id = os.environ.get("RESEARCHER_MODEL", "bedrock/us.amazon.nova-pro-v1:0")
 
         os.environ["AWS_REGION_NAME"] = region
         os.environ["AWS_REGION"] = region
@@ -239,7 +246,12 @@ async def test_bedrock():
         except Exception as list_error:
             openai_models = f"Error listing: {str(list_error)}"
 
-        model = LitellmModel(model=model_id)
+        MODEL = "bedrock/us.amazon.nova-pro-v1:0"
+        # model = LitellmModel(model=MODEL)
+        model = LitellmModel(model="openrouter/google/gemma-4-31b-it:free", 
+                        base_url="https://openrouter.ai/api/v1",
+                        api_key=os.environ.get("OPENROUTER_API_KEY"),
+                        )
 
         agent = Agent(
             name="Test Agent",

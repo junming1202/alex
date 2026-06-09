@@ -132,6 +132,7 @@ resource "aws_lambda_function" "researcher" {
   environment {
     variables = {
       OPENAI_API_KEY    = var.openai_api_key
+      OPENROUTER_API_KEY = var.openrouter_api_key
       ALEX_API_ENDPOINT = var.alex_api_endpoint
       ALEX_API_KEY      = var.alex_api_key
       BEDROCK_REGION    = var.bedrock_region
