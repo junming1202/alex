@@ -178,8 +178,12 @@ async def classify_instrument(
         bedrock_region = os.getenv("BEDROCK_REGION", "us-west-2")
         os.environ["AWS_REGION_NAME"] = bedrock_region
 
-        model = LitellmModel(model=f"bedrock/{model_id}")
-
+        # model = LitellmModel(model=f"bedrock/{model_id}")
+        model = LitellmModel(model="openrouter/google/gemma-4-31b-it:free", 
+                        base_url="https://openrouter.ai/api/v1",
+                        api_key=os.environ.get("OPENROUTER_API_KEY"),
+                        )
+        
         # Create the classification task
         task = CLASSIFICATION_PROMPT.format(
             symbol=symbol, name=name, instrument_type=instrument_type
