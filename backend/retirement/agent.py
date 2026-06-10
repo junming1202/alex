@@ -245,7 +245,7 @@ def create_agent(
     os.environ["AWS_REGION_NAME"] = bedrock_region
 
     # model = LitellmModel(model=f"bedrock/{model_id}")
-    model = LitellmModel(model="openrouter/google/gemma-4-31b-it:free", 
+    model = LitellmModel(model=os.getenv("OPENROUTER_MODEL"), 
                         base_url="https://openrouter.ai/api/v1",
                         api_key=os.environ.get("OPENROUTER_API_KEY"),
                         )
