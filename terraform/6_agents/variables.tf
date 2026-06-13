@@ -73,3 +73,35 @@ variable "openai_api_key" {
   default     = ""
   sensitive   = true
 }
+
+variable "openai_model" {
+  description = "OpenAI Model for LLM"
+  type        = string
+  default     = ""
+}
+
+variable "openrouter_api_key" {
+  description = "OpenRouter API key for LLM call"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "openrouter_model" {
+  description = "OpenRouter Model for LLM call"
+  type        = string
+  default     = ""
+}
+
+variable "gemini_api_key" {
+  description = "Gemini API key for LLM call"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "gemini_model" {
+  description = "Gemini Model for LLM call"
+  type        = string
+  default     = ""
+}
