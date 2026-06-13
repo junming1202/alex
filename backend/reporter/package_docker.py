@@ -62,6 +62,7 @@ def package_lambda():
             "--rm",
             "--platform",
             "linux/amd64",
+            "-u", f"{os.getuid()}:{os.getgid()}",
             "-v",
             f"{temp_path}:/build",
             "-v",
